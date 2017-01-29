@@ -1,0 +1,177 @@
+// assignment1.cpp : CSC 433/533 assignment 1 - Spring 2017.
+//	based on the 9th edition of the OpenGL Programming Guide (red book)
+//
+#include "vgl.h"
+
+#include "LoadShaders.h"
+
+#include <iostream>
+using namespace std;
+
+#ifdef __APPLE__
+#include <cmath>
+#endif
+
+enum VAO_IDs { Triangles, NumVAOs = 2 };
+enum Buffer_IDs { ArrayBuffer1, ArrayBuffer2, NumBuffers = 2 };
+enum Attrib_IDs { vPosition1, vPosition2, bufferColor };
+
+GLuint VAOs[NumVAOs];
+GLuint Buffers[NumBuffers];
+GLuint colorBuffer[1];
+
+const GLuint NumVertices = 6;
+
+GLuint program1, program2;
+
+//----------------------------------------------------------------------------
+//
+// init
+//
+
+void init(void) {
+
+        GLfloat triangle1[NumVertices][2] = {
+                {-0.90f, -0.90f}, {0.85f, -0.90f}, {-0.90f, 0.85f}, // Triangle 1
+                {0.90f, -0.85f},  {0.90f, 0.90f},  {-0.85f, 0.90f}// Triangle 2
+        };
+
+        glGenVertexArrays(NumVAOs, VAOs);
+        glBindVertexArray(VAOs[Triangles]);
+
+        // glCreateBuffers(NumBuffers, Buffers);		//OpenGL 4.5 method
+        glGenBuffers(NumBuffers, Buffers);
+        // glNamedBufferStorage(Buffers[ArrayBuffer], sizeof(vertices), vertices, 0);
+        // OpenGL 4.5 method
+        glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer1]); // ArrayBuffer is 0
+        glBufferData(GL_ARRAY_BUFFER, sizeof(triangle1), triangle1, GL_STATIC_DRAW);
+        glVertexAttribPointer(vPosition1, 2, GL_FLOAT, GL_FALSE, 0,
+                              BUFFER_OFFSET(0)); // vPosition is 0
+        glEnableVertexAttribArray(vPosition1);
+
+        ShaderInfo shaders1[] = {{GL_VERTEX_SHADER, "triangles.vert"},
+                                 {GL_FRAGMENT_SHADER, "triangles.frag"},
+                                 {GL_NONE, NULL}};
+
+        program1 = LoadShaders(shaders1);
+        if (program1 == NULL) {
+                cerr << "Failed shader1 load" << endl;
+        }
+        glUseProgram(program1);
+
+        // For Colored Triangle
+
+        GLfloat traingle2[3][2] = {
+                {0.0f, 0.5f}, {-0.5f, -0.5f}, {0.05f, -0.05f}
+        };
+        GLfloat traingle2Color[3][4]={
+                {1.0f, 0.0f, 0.0f, 1.0f},
+                {0.0f, 1.0f, 0.0f, 1.0f},
+                {0.0f, 0.0f, 1.0f, 1.0f}
+        };
+
+        glBindVertexArray(VAOs[1]);
+        glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer2]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(traingle2), traingle2, GL_STATIC_DRAW);
+        glVertexAttribPointer(vPosition2, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+        glEnableVertexAttribArray(vPosition2);
+
+        glGenBuffers(1, colorBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer[0]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(traingle2Color), traingle2Color, GL_STATIC_DRAW);
+        glVertexAttribPointer(bufferColor, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+        glEnableVertexAttribArray(bufferColor);
+
+        ShaderInfo shaders2[] = {{GL_VERTEX_SHADER, "colorTriangle.vert"},
+                                 {GL_FRAGMENT_SHADER, "colorTriangle.frag"},
+                                 {GL_NONE, NULL}};
+
+        program2 = LoadShaders(shaders2);
+        if(program2 == NULL) {
+                cerr << "Failed shader2 load" << endl;
+        }
+        glUseProgram(program2);
+}
+
+//----------------------------------------------------------------------------
+//
+// display
+//
+
+void display(void) {
+        static const float black[] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+        glClearBufferfv(GL_COLOR, 0, black);
+
+        glBindVertexArray(VAOs[Triangles]);
+        glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+        glUseProgram(program1);
+
+        glBindVertexArray(VAOs[1]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glUseProgram(program1);
+
+
+}
+
+
+//----------------------------------------------------------------------------
+//
+// main
+//
+
+#undef _WIN32
+#ifdef _WIN32
+int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance,
+                     _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+#else
+int main(int argc, char **argv)
+#endif
+{
+        glfwInit();
+
+        //#ifdef __APPLE__
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,
+                       3); // 4.1 latest version of OpenGL for OSX 10.9 Mavericks
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        //#endif
+
+        GLFWwindow *window = glfwCreateWindow(800, 800, "Assignment1", NULL, NULL);
+
+        glfwMakeContextCurrent(window);
+
+        gl3wInit();
+
+#define CHECK_VERSION
+#ifdef CHECK_VERSION
+        // code from OpenGL 4 Shading Language cookbook, second edition
+        const GLubyte *renderer = glGetString(GL_RENDERER);
+        const GLubyte *vendor = glGetString(GL_VENDOR);
+        const GLubyte *version = glGetString(GL_VERSION);
+        const GLubyte *glslVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
+        GLint major, minor;
+        glGetIntegerv(GL_MAJOR_VERSION, &major);
+        glGetIntegerv(GL_MINOR_VERSION, &minor);
+
+        cout << "GL Vendor            :" << vendor << endl;
+        cout << "GL Renderer          :" << renderer << endl;
+        cout << "GL Version (string)  :" << version << endl;
+        cout << "GL Version (integer) :" << major << " " << minor << endl;
+        cout << "GLSL Version         :" << glslVersion << endl;
+        cout << "major version: " << major << "  minor version: " << minor << endl;
+#endif
+
+        init();
+
+        while (!glfwWindowShouldClose(window)) {
+                display();
+                glfwSwapBuffers(window);
+                glfwPollEvents();
+        }
+
+        glfwDestroyWindow(window);
+
+        glfwTerminate();
+}
