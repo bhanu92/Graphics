@@ -23,7 +23,7 @@ GLuint Buffers[NumBuffers];
 GLuint colorBuffer[1];
 
 const GLuint NumVertices = 9;
-GLuint program, circleVertices;
+GLuint program, circleVertices, heartVertices;
 GLfloat radius = 0.6f;
 GLuint circleSteps = 51, heartSteps = 101;
 
@@ -40,6 +40,7 @@ vector<vertexData> circle(GLfloat radius, GLuint steps ) {
         vector<vertexData> circleVector;
         GLfloat circleFragment = 360.0f/steps;
         vertexData data;
+
         for(GLfloat angle = 0.0f; angle <= 360.0f; angle+=circleFragment) {
                 GLfloat x = radius * cos((angle * PI) / 180.0f);
                 GLfloat y = radius * sin((angle * PI) / 180.0f);
@@ -51,6 +52,33 @@ vector<vertexData> circle(GLfloat radius, GLuint steps ) {
         }
 
         return circleVector;
+}
+
+// Functions that generates coodinates for the rendering of heart
+
+vector<vertexData> heart(GLuint steps){
+
+        vector<vertexData> heartVector;
+        GLfloat heartFragment = 360.0f/steps;
+        vertexData data;
+
+        for(GLfloat angle = 0.0f; angle <= 360.0f; angle+=heartFragment) {
+
+                GLfloat x = (16.0f/17.0f) * sin((angle * PI) / 180.0f) *
+                            sin((angle * PI) / 180.0f) * sin((angle * PI) / 180.0f);
+                GLfloat y = (1.0f/17.0f) * (13 * cos((angle * PI) / 180.0f) -
+                                            5 * cos(2 * ((angle * PI) / 180.0f))
+                                            - 2 * cos(3 * ((angle * PI) / 180.0f))
+                                            - cos(4*((angle * PI) / 180.0f)));
+
+                data.color[0] = 1.0f; data.color[1] = 0.0f;
+                data.color[2] = 0.0f; data.color[3] = 1.0f;
+                data.vertex[0] = x; data.vertex[1] = y;
+                data.vertex[2] = 0.0f; data.vertex[3] = 0.0f;
+                heartVector.push_back(data);
+        }
+
+        return heartVector;
 }
 
 
@@ -81,11 +109,16 @@ void init(void) {
         vector<vertexData> Circle = circle(radius, circleSteps);
         circleVertices = Circle.size();
 
-        //vector<vertexData> Heart = heart()
-
-
         for(int i = 0; i < circleVertices; i++) {
                 allVertices.push_back(Circle.at(i));
+        }
+
+
+        vector<vertexData> Heart = heart(heartSteps);
+        heartVertices = Heart.size();
+
+        for(int i = 0; i < heartVertices; i++) {
+                allVertices.push_back(Heart.at(i));
         }
 
         GLuint numVertices = allVertices.size();
@@ -133,9 +166,9 @@ void display(void) {
         glClearBufferfv(GL_COLOR, 0, black);
         glUseProgram(program);
         glBindVertexArray(VAOs[Triangles]);
-        glDrawArrays(GL_TRIANGLES, 0, 9);
+        //glDrawArrays(GL_TRIANGLES, 0, 9);
         glDrawArrays(GL_TRIANGLE_FAN, NumVertices, circleVertices);
-
+        glDrawArrays(GL_LINE_STRIP, circleVertices+NumVertices, heartVertices);
 
 }
 
