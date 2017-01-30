@@ -37,7 +37,7 @@ GLuint circleVertices, heartVertices;
 GLfloat radius;
 GLuint circleSteps, heartSteps;
 GLfloat red = 0.0f, green = 0.0f, blue = 0.0f;
-bool twoTriangles = true, coloredTriangle = false, circle = false, heart = false, wireFrame = false;
+bool twoTriangles = true, coloredTriangle = true, circle = false, heart = false, wireFrame = false;
 bool defaultColor = true;
 
 
@@ -134,8 +134,8 @@ void renderCircle(GLfloat radius, GLuint steps){
         glUseProgram(program3);
         if(defaultColor) {
                 GLfloat circleColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
-                GLint locatn = glGetUniformLocation(program3, "inColor");
-                glUniform4fv(locatn, 1, circleColor);
+                GLint loc3 = glGetUniformLocation(program3, "inColor");
+                glProgramUniform4fv(program3, loc3, 1, circleColor);
         }
 
         glGenVertexArrays(1, circleVAOs);
@@ -145,7 +145,8 @@ void renderCircle(GLfloat radius, GLuint steps){
         glBufferData(GL_ARRAY_BUFFER, sizeof(circleVert), circleVert, GL_STATIC_DRAW);
 
         //glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData), BUFFER_OFFSET(0));
-        glVertexAttribPointer(vPosition3, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData), BUFFER_OFFSET(sizeof(circleVert[0].color)));
+        glVertexAttribPointer(vPosition3, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
+                              BUFFER_OFFSET(sizeof(circleVert[0].color)));
         //glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(vPosition3);
 
@@ -206,8 +207,8 @@ void renderHeart(GLuint step){
         glUseProgram(program4);
         if(defaultColor) {
                 GLfloat heartColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
-                GLint locatn = glGetUniformLocation(program4, "inColor");
-                glUniform4fv(locatn, 1, heartColor);
+                GLint loc2= glGetUniformLocation(program4, "inColor");
+                glProgramUniform4fv(program4, loc2, 1, heartColor);
         }
 
         glGenVertexArrays(1, heartVAOs);
@@ -217,7 +218,8 @@ void renderHeart(GLuint step){
         glBufferData(GL_ARRAY_BUFFER, sizeof(heartVert), heartVert, GL_STATIC_DRAW);
 
         //glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData), BUFFER_OFFSET(0));
-        glVertexAttribPointer(vPosition4, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData), BUFFER_OFFSET(sizeof(heartVert[0].color)));
+        glVertexAttribPointer(vPosition4, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
+                              BUFFER_OFFSET(sizeof(heartVert[0].color)));
         //glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(vPosition4);
 
@@ -247,6 +249,7 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                         case GLFW_KEY_G:
                                 circleInputs();
                                 renderCircle(radius, circleSteps);
+                                circle = true;
                                 break;
 
                         case GLFW_KEY_H:
@@ -312,8 +315,10 @@ void colorTriangle(){
         glGenBuffers(1, colorBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, colorBuffer[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
-        glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData), BUFFER_OFFSET(0));
-        glVertexAttribPointer(vPosition2, 2, GL_FLOAT, GL_FALSE, sizeof(vertexData), BUFFER_OFFSET(sizeof(Triangle[0].color)));
+        glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
+                              BUFFER_OFFSET(0));
+        glVertexAttribPointer(vPosition2, 2, GL_FLOAT, GL_FALSE, sizeof(vertexData),
+                              BUFFER_OFFSET(sizeof(Triangle[0].color)));
         glEnableVertexAttribArray(vPosition2);
         glEnableVertexAttribArray(vColor);
 
@@ -358,11 +363,11 @@ void init(void) {
         glUseProgram(program1);
         if(defaultColor) {
                 GLfloat trianglesColor[4] = { 0.0f, 0.0f, 1.0f, 1.0f};
-                GLint locate = glGetUniformLocation(program1, "inColor");
-                glUniform4fv(locate, 1, trianglesColor);
+                GLint loc1 = glGetUniformLocation(program1, "inColor");
+                glProgramUniform4fv(program1, loc1, 1, trianglesColor);
         }
         // VAO anf VBO for colored triangles
-        //colorTriangle();
+        colorTriangle();
 
 }
 
@@ -384,8 +389,8 @@ void display(void) {
         if(twoTriangles) {
                 glUseProgram(program1);
                 if(!defaultColor) {
-                        GLint locate = glGetUniformLocation(program1, "inColor");
-                        glUniform4fv(locate, 1, color);
+                        GLint locate1 = glGetUniformLocation(program1, "inColor");
+                        glProgramUniform4fv(program1, locate1, 1, color);
                 }
                 glBindVertexArray(VAOs[Triangles]);
                 glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
@@ -400,13 +405,14 @@ void display(void) {
                 glEnableVertexAttribArray(vPosition2);
                 glEnableVertexAttribArray(vColor);
                 glDrawArrays(GL_TRIANGLES, 0, 3);
+                //cout << "I am here"<< endl;
         }
 
         if(circle) {
                 glUseProgram(program3);
                 if(!defaultColor) {
-                        GLint locate = glGetUniformLocation(program3, "inColor");
-                        glUniform4fv(locate, 1, color);
+                        GLint locate2 = glGetUniformLocation(program3, "inColor");
+                        glProgramUniform4fv(program3, locate2, 1, color);
                 }
                 glBindVertexArray(circleVAOs[0]);
                 glBindBuffer(GL_ARRAY_BUFFER, circleBuffer[0]);
@@ -417,8 +423,8 @@ void display(void) {
         if(heart) {
                 glUseProgram(program4);
                 if(!defaultColor) {
-                        GLint locate = glGetUniformLocation(program3, "inColor");
-                        glUniform4fv(locate, 1, color);
+                        GLint locate3 = glGetUniformLocation(program4, "inColor");
+                        glProgramUniform4fv(program4, locate3, 1, color);
                 }
                 glBindVertexArray(heartVAOs[0]);
                 glBindBuffer(GL_ARRAY_BUFFER, heartBuffer[0]);
