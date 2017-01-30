@@ -1,12 +1,13 @@
 #version 330 core
 
-layout (location = 1 ) in vec4 vPosition2
-layout (location = 3 ) in vec4 bufferColor
+layout (location = 0) in vec4 vPosition2;
+layout (location = 1) in vec4 vColor;
 
-out vec4 color;
+out vec4 fs_color;
 
-void main()
+void
+main()
 {
-        color = bufferColor;
-        gl_Position = vPosition2;
+    fs_color = vColor;
+    gl_Position = vPosition2;
 }
