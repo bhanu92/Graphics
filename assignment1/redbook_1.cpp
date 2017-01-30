@@ -93,6 +93,12 @@ vector<vertexData> circleVec(GLfloat rad, GLuint step ) {
         GLfloat circleFragment = 360.0f/step;
         vertexData data;
 
+        data.color[0] = 0.0f; data.color[1] = 0.0f;
+        data.color[2] = 1.0f; data.color[3] = 1.0f;
+        data.vertex[0] = 0.0f; data.vertex[1] = 0.0f;
+        data.vertex[2] = 0.0f; data.vertex[3] = 0.0f;
+        circleVector.push_back(data);
+
         for(GLfloat angle = 0.0f; angle <= 360.0f; angle+=circleFragment) {
                 GLfloat x = rad * cos((angle * PI) / 180.0f);
                 GLfloat y = rad * sin((angle * PI) / 180.0f);
@@ -112,13 +118,12 @@ void renderCircle(GLfloat radius, GLuint steps){
         int count = 0;
         vector<vertexData> circleData = circleVec(radius, steps);
         circleVertices = circleData.size();
-        vertexData circleVert[circleVertices];
+        GLfloat circleVert[circleVertices][2];
         for(int i = 0; i < circleVertices; i++) {
                 for(int j = 0; j < 4; j++) {
-                        circleVert[i].color[j] = circleData[i].color[j];
-                        circleVert[i].vertex[j] = circleData[i].vertex[j];
-
-                        cout << circleVert[i].color[j] << "   " << circleVert[i].vertex[j] <<endl;
+                        //circleVert[i].color[j] = circleData[i].color[j];
+                        circleVert[i][j] = circleData[i].vertex[j];
+                        cout << circleVert[i][j] << endl;
                 }
                 count++;
         }
@@ -144,9 +149,9 @@ void renderCircle(GLfloat radius, GLuint steps){
         glBindBuffer(GL_ARRAY_BUFFER, circleBuffer[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(circleVert), circleVert, GL_STATIC_DRAW);
 
-        //glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData), BUFFER_OFFSET(0));
-        glVertexAttribPointer(vPosition3, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
-                              BUFFER_OFFSET(sizeof(circleVert[0].color)));
+        glVertexAttribPointer(vPosition3, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+        //glVertexAttribPointer(vPosition3, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
+        //                      BUFFER_OFFSET(sizeof(circleVert[0].color)));
         //glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(vPosition3);
 
@@ -185,13 +190,12 @@ void renderHeart(GLuint step){
         int count = 0;
         vector<vertexData> heartData = heartVec(step);
         heartVertices = heartData.size();
-        vertexData heartVert[heartVertices];
+        GLfloat heartVert[heartVertices][2];
         for(int i = 0; i < heartVertices; i++) {
-                for(int j = 0; j < 4; j++) {
-                        heartVert[i].color[j] = heartData[i].color[j];
-                        heartVert[i].vertex[j] = heartData[i].vertex[j];
-
-                        cout << heartVert[i].color[j] << "   " << heartVert[i].vertex[j] <<endl;
+                for(int j = 0; j < 2; j++) {
+                        //heartVert[i].color[j] = heartData[i].color[j];
+                        heartVert[i][j] = heartData[i].vertex[j];
+                        //cout << heartVert[i].color[j] << "   " << heartVert[i].vertex[j] <<endl;
                 }
                 count++;
         }
@@ -217,9 +221,9 @@ void renderHeart(GLuint step){
         glBindBuffer(GL_ARRAY_BUFFER, heartBuffer[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(heartVert), heartVert, GL_STATIC_DRAW);
 
-        //glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData), BUFFER_OFFSET(0));
-        glVertexAttribPointer(vPosition4, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
-                              BUFFER_OFFSET(sizeof(heartVert[0].color)));
+        glVertexAttribPointer(vPosition4, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+        //glVertexAttribPointer(vPosition4, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
+        //                      BUFFER_OFFSET(sizeof(heartVert[0].color)));
         //glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(vPosition4);
 
@@ -290,41 +294,6 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
         }
 }
 
-
-void colorTriangle(){
-
-        vertexData Triangle[3] = {
-                {{1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.5f}},       //colored triangle
-                {{0.0f, 1.0f, 0.0f, 1.0f}, {0.7f, -0.35f}},
-                {{0.0f, 0.0f, 1.0f, 1.0f}, {-0.75f, -0.35f}}
-        };
-
-
-        ShaderInfo shaders2[] = {{GL_VERTEX_SHADER, "colorTriangle.vert"},
-                                 {GL_FRAGMENT_SHADER, "colorTriangle.frag"},
-                                 {GL_NONE, NULL}};
-
-        program2  = LoadShaders(shaders2);
-        if(program2 == NULL) {
-                cerr << "Failed shader2 load" << endl;
-        }
-        glUseProgram(program2);
-
-        glGenVertexArrays(1, colorVAOs);
-        glBindVertexArray(colorVAOs[0]);
-        glGenBuffers(1, colorBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
-        glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
-                              BUFFER_OFFSET(0));
-        glVertexAttribPointer(vPosition2, 2, GL_FLOAT, GL_FALSE, sizeof(vertexData),
-                              BUFFER_OFFSET(sizeof(Triangle[0].color)));
-        glEnableVertexAttribArray(vPosition2);
-        glEnableVertexAttribArray(vColor);
-
-}
-
-
 //----------------------------------------------------------------------------
 //
 // init
@@ -367,7 +336,35 @@ void init(void) {
                 glProgramUniform4fv(program1, loc1, 1, trianglesColor);
         }
         // VAO anf VBO for colored triangles
-        colorTriangle();
+
+        vertexData Triangle[3] = {
+                {{1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.5f}},               //colored triangle
+                {{0.0f, 1.0f, 0.0f, 1.0f}, {0.7f, -0.35f}},
+                {{0.0f, 0.0f, 1.0f, 1.0f}, {-0.7f, -0.35f}}
+        };
+
+
+        ShaderInfo shaders2[] = {{GL_VERTEX_SHADER, "colorTriangle.vert"},
+                                 {GL_FRAGMENT_SHADER, "colorTriangle.frag"},
+                                 {GL_NONE, NULL}};
+
+        program2  = LoadShaders(shaders2);
+        if(program2 == NULL) {
+                cerr << "Failed shader2 load" << endl;
+        }
+        glUseProgram(program2);
+
+        glGenVertexArrays(1, colorVAOs);
+        glBindVertexArray(colorVAOs[0]);
+        glGenBuffers(1, colorBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer[0]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle, GL_STATIC_DRAW);
+        glVertexAttribPointer(vColor, 4, GL_FLOAT, GL_FALSE, sizeof(vertexData),
+                              BUFFER_OFFSET(0));
+        glVertexAttribPointer(vPosition2, 2, GL_FLOAT, GL_FALSE, sizeof(vertexData),
+                              BUFFER_OFFSET(sizeof(Triangle[0].color)));
+        glEnableVertexAttribArray(vPosition2);
+        glEnableVertexAttribArray(vColor);
 
 }
 
@@ -378,6 +375,7 @@ void init(void) {
 
 void display(void) {
         static const float black[] = {0.0f, 0.0f, 0.0f, 0.0f};
+        glClearBufferfv(GL_COLOR, 0, black);
         GLfloat color[4] = {red, green, blue, 1.0f};
         if (wireFrame) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -393,17 +391,12 @@ void display(void) {
                         glProgramUniform4fv(program1, locate1, 1, color);
                 }
                 glBindVertexArray(VAOs[Triangles]);
-                glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
-                glEnableVertexAttribArray(vPosition1);
                 glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
         if(coloredTriangle) {
                 glUseProgram(program2);
                 glBindVertexArray(colorVAOs[0]);
-                glBindBuffer(GL_ARRAY_BUFFER, colorBuffer[0]);
-                glEnableVertexAttribArray(vPosition2);
-                glEnableVertexAttribArray(vColor);
                 glDrawArrays(GL_TRIANGLES, 0, 3);
                 //cout << "I am here"<< endl;
         }
@@ -415,9 +408,7 @@ void display(void) {
                         glProgramUniform4fv(program3, locate2, 1, color);
                 }
                 glBindVertexArray(circleVAOs[0]);
-                glBindBuffer(GL_ARRAY_BUFFER, circleBuffer[0]);
-                glEnableVertexAttribArray(vPosition3);
-                glDrawArrays(GL_TRIANGLE_FAN, 0, circleSteps);
+                glDrawArrays(GL_TRIANGLE_FAN, 0, circleVertices);
         }
 
         if(heart) {
@@ -427,12 +418,9 @@ void display(void) {
                         glProgramUniform4fv(program4, locate3, 1, color);
                 }
                 glBindVertexArray(heartVAOs[0]);
-                glBindBuffer(GL_ARRAY_BUFFER, heartBuffer[0]);
-                glEnableVertexAttribArray(vPosition3);
                 glDrawArrays(GL_LINE_STRIP, 0, heartSteps);
         }
 }
-
 
 //----------------------------------------------------------------------------
 //
