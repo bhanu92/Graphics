@@ -1,6 +1,6 @@
 #version 330 core
 
-layout (location = 4) in vec4 vPosition4;
+layout (location = 3) in vec4 vPosition4;
 
 uniform vec4 inColor;
 out vec4 outColor;

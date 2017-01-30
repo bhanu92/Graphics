@@ -99,7 +99,7 @@ vector<vertexData> circleVec(GLfloat rad, GLuint step ) {
         data.vertex[2] = 0.0f; data.vertex[3] = 0.0f;
         circleVector.push_back(data);
 
-        for(GLfloat angle = 0.0f; angle <= 360.0f; angle+=circleFragment) {
+        for(GLfloat angle = 0.0f; angle < 361.0f; angle+=circleFragment) {
                 GLfloat x = rad * cos((angle * PI) / 180.0f);
                 GLfloat y = rad * sin((angle * PI) / 180.0f);
                 data.color[0] = 0.0f; data.color[1] = 0.0f;
@@ -123,9 +123,9 @@ void renderCircle(GLfloat radius, GLuint steps){
                 for(int j = 0; j < 4; j++) {
                         //circleVert[i].color[j] = circleData[i].color[j];
                         circleVert[i][j] = circleData[i].vertex[j];
-                        cout << circleVert[i][j] << endl;
+                        //cout << circleVert[i][j] << endl;
                 }
-                count++;
+                //count++;
         }
         cout << count << endl;
         ShaderInfo shaders3[] = {{GL_VERTEX_SHADER, "circle.vert"},
