@@ -35,7 +35,7 @@ const GLuint NumVertices = 6;
 GLuint program1, program2, program3, program4;
 GLuint circleVertices, heartVertices;
 GLfloat radius;
-GLuint circleSteps, heartSteps;
+GLint circleSteps, heartSteps;
 GLfloat red = 0.0f, green = 0.0f, blue = 0.0f;
 bool twoTriangles = true, coloredTriangle = true, circle = false, heart = false, wireFrame = false;
 bool defaultColor = true;
@@ -70,18 +70,19 @@ void readInputs(){
 // Function for circle settings
 
 void circleInputs(){
+        while(true) {
+                cout << "\nEnter the value of Radius of circle(0,1): ";
+                cin >> radius;
+                cout << "\nEnter the number of steps: ";
+                cin >>  circleSteps;
 
-        cout << "\nEnter the value of Radius of circle(0,1): ";
-        cin >> radius;
-        cout << "\nEnter the number of steps: ";
-        cin >>  circleSteps;
+                if(!(radius <= 1.0f && radius > 0.0f && circleSteps > 0))
+                        cout << "Entered out of bound values. Enter radius in between <0,1> and steps >0" << endl;
 
-        if(!(radius <= 1 && radius >=0 && circleSteps > 0)) {
-                cout << "Entered out of bound values. Enter radius in between <0,1>";
-                return;
+                else
+                        break;
         }
-        else
-                circle = true;
+        circle = true;
         return;
 }
 
@@ -127,7 +128,7 @@ void renderCircle(GLfloat radius, GLuint steps){
                 }
                 //count++;
         }
-        cout << count << endl;
+        //cout << count << endl;
         ShaderInfo shaders3[] = {{GL_VERTEX_SHADER, "circle.vert"},
                                  {GL_FRAGMENT_SHADER, "circle.frag"},
                                  {GL_NONE, NULL}};
@@ -187,7 +188,7 @@ vector<vertexData> heartVec(GLuint steps){
 // Function for rendering the heart
 
 void renderHeart(GLuint step){
-        int count = 0;
+        //int count = 0;
         vector<vertexData> heartData = heartVec(step);
         heartVertices = heartData.size();
         GLfloat heartVert[heartVertices][2];
@@ -197,9 +198,9 @@ void renderHeart(GLuint step){
                         heartVert[i][j] = heartData[i].vertex[j];
                         //cout << heartVert[i].color[j] << "   " << heartVert[i].vertex[j] <<endl;
                 }
-                count++;
+                //count++;
         }
-        cout << count << endl;
+        //cout << count << endl;
         ShaderInfo shaders4[] = {{GL_VERTEX_SHADER, "heart.vert"},
                                  {GL_FRAGMENT_SHADER, "heart.frag"},
                                  {GL_NONE, NULL}};
@@ -257,11 +258,14 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                                 break;
 
                         case GLFW_KEY_H:
-                                cout << "Enter the number of steps for heart curve: ";
-                                cin >> heartSteps;
-                                if(heartSteps <= 0) {
-                                        cout << "Enter a vaild input for the steps ( >0 )" << endl;
-                                        return;
+                                while(true) {
+                                        cout << "Enter the number of steps for heart curve: ";
+                                        cin >> heartSteps;
+                                        if(heartSteps <= 0) {
+                                                cout << "Enter a vaild input for the steps ( >0 )" << endl;
+                                        }
+                                        else
+                                                break;
                                 }
                                 renderHeart(heartSteps);
                                 heart = true;
@@ -408,7 +412,7 @@ void display(void) {
                         glProgramUniform4fv(program3, locate2, 1, color);
                 }
                 glBindVertexArray(circleVAOs[0]);
-                glDrawArrays(GL_TRIANGLE_FAN, 0, circleVertices);
+                glDrawArrays(GL_TRIANGLE_FAN, 0, circleVertices+1);
         }
 
         if(heart) {
@@ -418,7 +422,7 @@ void display(void) {
                         glProgramUniform4fv(program4, locate3, 1, color);
                 }
                 glBindVertexArray(heartVAOs[0]);
-                glDrawArrays(GL_LINE_STRIP, 0, heartSteps);
+                glDrawArrays(GL_LINE_STRIP, 0, heartVertices);
         }
 }
 
@@ -483,4 +487,5 @@ int main(int argc, char **argv)
         glfwDestroyWindow(window);
 
         glfwTerminate();
+
 }
