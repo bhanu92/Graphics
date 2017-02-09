@@ -1,7 +1,7 @@
-PROG = redbook_1
+PROG = main
 
 CC = g++
-CFLAGS = -g -w -Iinclude
+CFLAGS = -g -w -Iinclude -D_DEBUG
 LIBS = -lglfw3 -lGL -lX11 -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -lm -pthread -ldl
 OBJS = $(PROG).o LoadShaders.o gl3w.o
 

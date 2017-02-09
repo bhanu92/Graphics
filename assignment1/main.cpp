@@ -53,11 +53,23 @@ void readInputs(){
 
         cout << "Enter the color values accordingly" << endl;
         cout << "Enter the value for Red: ";
+        if (cin.fail()) {
+                cin.clear();
+                cin.ignore(100, '\n');
+        }
         cin >> red;
         cout << "\nEnter the value for Green: ";
         cin >> green;
+        if (cin.fail()) {
+                cin.clear();
+                cin.ignore(100, '\n');
+        }
         cout << "\nEnter the value for Blue: ";
         cin >> blue;
+        if (cin.fail()) {
+                cin.clear();
+                cin.ignore(100, '\n');
+        }
 
         if(!((red>=0 && red<=1) && (green>=0 && green<=1) && (blue>=0 && blue<=1))) {
                 cout << "Entered out of bound values. Enter in between <0,1>";
@@ -70,25 +82,33 @@ void readInputs(){
 // Function for circle settings
 
 void circleInputs(){
-        while(true) {
-                cout << "\nEnter the value of Radius of circle(0,1): ";
-                cin >> radius;
-                cout << "\nEnter the number of steps: ";
-                cin >>  circleSteps;
-
-                if(!(radius <= 1.0f && radius > 0.0f && circleSteps > 0))
-                        cout << "Entered out of bound values. Enter radius in between <0,1> and steps >0" << endl;
-
-                else
-                        break;
+        //while(true) {
+        cout << "\nEnter the value of Radius of circle(0,1): ";
+        cin >> radius;
+        if (cin.fail()) {
+                cin.clear();
+                cin.ignore(100, '\n');
         }
+        cout << "\nEnter the number of steps: ";
+        cin >>  circleSteps;
+        if (cin.fail()) {
+                cin.clear();
+                cin.ignore(100, '\n');
+        }
+
+        if(!(radius <= 1.0f && radius > 0.0f && circleSteps > 0))
+                cout << "Entered out of bound values. Enter radius in between <0,1> and steps >0" << endl;
+
+        //        else
+        ///                break;
+        //}
         circle = true;
         return;
 }
 
 // Function that generates coordinates for the rendering of circle
 
-vector<vertexData> circleVec(GLfloat rad, GLuint step ) {
+vector<vertexData> circleVec(GLfloat rad, GLint step ) {
 
         vector<vertexData> circleVector;
         GLfloat circleFragment = 360.0f/step;
@@ -115,7 +135,7 @@ vector<vertexData> circleVec(GLfloat rad, GLuint step ) {
 
 // Function for rendering circle
 
-void renderCircle(GLfloat radius, GLuint steps){
+void renderCircle(GLfloat radius, GLint steps){
         int count = 0;
         vector<vertexData> circleData = circleVec(radius, steps);
         circleVertices = circleData.size();
@@ -160,7 +180,7 @@ void renderCircle(GLfloat radius, GLuint steps){
 
 // Functions that generates coodinates for the rendering of heart
 
-vector<vertexData> heartVec(GLuint steps){
+vector<vertexData> heartVec(GLint steps){
 
         vector<vertexData> heartVector;
         GLfloat heartFragment = 360.0f/steps;
@@ -187,7 +207,7 @@ vector<vertexData> heartVec(GLuint steps){
 
 // Function for rendering the heart
 
-void renderHeart(GLuint step){
+void renderHeart(GLint step){
         //int count = 0;
         vector<vertexData> heartData = heartVec(step);
         heartVertices = heartData.size();
@@ -258,15 +278,19 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                                 break;
 
                         case GLFW_KEY_H:
-                                while(true) {
-                                        cout << "Enter the number of steps for heart curve: ";
-                                        cin >> heartSteps;
-                                        if(heartSteps <= 0) {
-                                                cout << "Enter a vaild input for the steps ( >0 )" << endl;
-                                        }
-                                        else
-                                                break;
+                                //while(true) {
+                                cout << "Enter the number of steps for heart curve: ";
+                                cin >> heartSteps;
+                                if (cin.fail()) {
+                                        cin.clear();
+                                        cin.ignore(100, '\n');
                                 }
+                                if(heartSteps <= 0) {
+                                        cout << "Enter a vaild input for the steps ( >0 )" << endl;
+                                }
+                                //        else
+                                //                break;
+                                //}
                                 renderHeart(heartSteps);
                                 heart = true;
                                 break;
@@ -412,7 +436,7 @@ void display(void) {
                         glProgramUniform4fv(program3, locate2, 1, color);
                 }
                 glBindVertexArray(circleVAOs[0]);
-                glDrawArrays(GL_TRIANGLE_FAN, 0, circleVertices+1);
+                glDrawArrays(GL_TRIANGLE_FAN, 0, circleVertices);
         }
 
         if(heart) {
@@ -473,6 +497,10 @@ int main(int argc, char **argv)
         cout << "GLSL Version         :" << glslVersion << endl;
         cout << "major version: " << major << "  minor version: " << minor << endl;
 #endif
+
+        //float lineWidth[2];
+        //glGetFloatv(GL_LINE_WIDTH_RANGE, lineWidth);
+        //cout << *lineWidth << endl;
 
         init();
 
