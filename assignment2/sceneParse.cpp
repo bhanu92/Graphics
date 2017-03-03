@@ -24,10 +24,8 @@ sceneInfo sceneParse(string sceneFile){
                 exit(EXIT_FAILURE);
         }
 
-        while(file >> token) {
+        while(file >> token)
                 tokens.push_back(token);
-                //cout << token << endl;
-        }
 
         // Adding NULL values at the end of the vector
         // As the scenefiles are of varying size
