@@ -1,9 +1,9 @@
-PROG = main
+PROG = viewer
 
 CC = g++
 CFLAGS = -g -w -Iinclude -D_DEBUG
 LIBS = -lglfw3 -lGL -lX11 -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -lm -pthread -ldl
-OBJS = $(PROG).o LoadShaders.o gl3w.o
+OBJS = $(PROG).o LoadShaders.o gl3w.o viewer.o sceneParse.o
 
 all: $(PROG)
 
