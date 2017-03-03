@@ -5,18 +5,19 @@
 #ifndef LOADOBJ_H
 #define LOADOBJ_H
 
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
 #include <math.h>
+
 #include "vgl.h"
 #include <glm/glm.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-using namespace glm;
 
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <string>
+using namespace glm;
 using namespace std;
 
 typedef struct {
@@ -66,19 +67,19 @@ typedef struct {
 
 // light description
 typedef struct {
-        int isEnabled;  // is this light active
-        int isLocal;    // true for point light source, false for directional light
-        int isSpot;             // true for spotlight
+        int isEnabled = 0;  // is this light active
+        int isLocal = 0;    // true for point light source, false for directional light
+        int isSpot = 0;             // true for spotlight
         vec3 ambient;   // light's contribution to ambient light (r,g,b)
         vec3 color;             // color of light (r,g,b)
         vec3 position;  // location of local light source, direction to light source otherwise
         vec3 halfVector;
         vec3 coneDirection;             // spotlight attributes
-        float spotCosCutoff;
-        float spotExponent;
-        float constantAttenuation;      // local light attenuation coefficients
-        float linearAttenuation;
-        float quadraticAttenuation;
+        float spotCosCutoff = 0.0f;
+        float spotExponent = 0.0f;
+        float constantAttenuation = 0.0f;      // local light attenuation coefficients
+        float linearAttenuation = 0.0f;
+        float quadraticAttenuation = 0.0f;
 }lightProperties;
 
 
@@ -119,6 +120,6 @@ int loadObjFile(char *fileName, objInfo **theObjects, int *numObjects);
 // out: the number of objInfo records in theObjects array
 // memory for theObjects array is allocated and managed within loadObjFile function
 
-sceneInfo sceneParse(char* file);
+sceneInfo sceneParse(string file);
 
 #endif  //LOADOBJ_H

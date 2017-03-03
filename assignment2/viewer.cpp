@@ -70,8 +70,8 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                         case GLFW_KEY_W:
                         case GLFW_KEY_UP:
                                 if(north == true) {
-                                        sceneData.view.eye += 2*gaze;
-                                        sceneData.view.center += 2*gaze;
+                                        sceneData.view.eye += 2.0f * gaze;
+                                        sceneData.view.center += 2.0f *gaze;
                                         viewMatrix = lookAt(sceneData.view.eye, sceneData.view.center, sceneData.view.viewup);
                                         north = false;
                                 }
@@ -82,8 +82,8 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                         case GLFW_KEY_S:
                         case GLFW_KEY_DOWN:
                                 if(south == true) {
-                                        sceneData.view.eye -= 2*gaze;
-                                        sceneData.view.center -= 2*gaze;
+                                        sceneData.view.eye -= 2.0f * gaze;
+                                        sceneData.view.center -= 2.0f * gaze;
                                         viewMatrix = lookAt(sceneData.view.eye, sceneData.view.center, sceneData.view.viewup);
                                         south = false;
                                 }
@@ -94,8 +94,8 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                         case GLFW_KEY_D:
                         case GLFW_KEY_RIGHT:
                                 if(east == true) {
-                                        sceneData.view.eye -= 2*u;
-                                        sceneData.view.center -= 2*u;
+                                        sceneData.view.eye -= 2.0f * u;
+                                        sceneData.view.center -= 2.0f * u;
                                         viewMatrix = lookAt(sceneData.view.eye, sceneData.view.center, sceneData.view.viewup);
                                         east = false;
                                 }
@@ -106,8 +106,8 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                         case GLFW_KEY_A:
                         case GLFW_KEY_LEFT:
                                 if(west == true) {
-                                        sceneData.view.eye += 2*u;
-                                        sceneData.view.center += 2 * u;
+                                        sceneData.view.eye += 2.0f * u;
+                                        sceneData.view.center += 2.0f * u;
                                         viewMatrix = lookAt(sceneData.view.eye, sceneData.view.center, sceneData.view.viewup);
                                         west = false;
                                 }
@@ -207,7 +207,8 @@ void windowCallback(GLFWwindow* window, int w, int h){
 
 void init(string fileName) {
 
-        sceneData = parseScene(fileName);
+        sceneData = sceneParse(fileName);
+
         /*
            cout << "Size of light vector from scene " << sceneData.light.size() << "\n"
              << "Size of object vector from scene " << sceneData.object.size() << endl;
@@ -238,10 +239,10 @@ void init(string fileName) {
                 cout << "shaderPath" << sceneData.object.at(i).shaderType << endl;
                 cout << "t vector " << to_string(sceneData.object.at(i).t) << endl;
                 cout << "rx value " << sceneData.object.at(i).rx << endl;
-                cout << "Model Mat" << to_string(sceneData.object.at(i).modelMat) << endl;
+                cout << "Model Mat" << to_string(sceneData.object.at(i).modelMatrix) << endl;
            }
-
          */
+
         string objFilePath = sceneData.object.at(0).objPath;
         //cout << objFilePath <<" " << objFilePath.length()<<endl;
         //char* file = &objFilePath[0];
@@ -253,7 +254,7 @@ void init(string fileName) {
         //cout << "Number of objects returned from OBJ file: " << numObjs << endl;
         for(int i = 0; i < sceneData.object.size(); i++) {
                 for(int j = 0; j < numObjs; j++) {
-                        objinfo[j].modelMatrix = sceneData.object.at(i).modelMat;
+                        objinfo[j].modelMatrix = sceneData.object.at(i).modelMatrix;
                         //cout <<"Ka: " << to_string(objinfo[j].Ka) << endl;
                         //cout <<"Kd: " << to_string(objinfo[j].Kd) << endl;
                         //cout <<"Ks: " << to_string(objinfo[j].Ks) << endl;

@@ -1,9 +1,9 @@
 PROG = viewer
 
 CC = g++
-CFLAGS = -g -w -Iinclude -D_DEBUG
+CFLAGS = -g -w -Iinclude -D_DEBUG -std=c++11
 LIBS = -lglfw3 -lGL -lX11 -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -lm -pthread -ldl
-OBJS = $(PROG).o LoadShaders.o gl3w.o viewer.o sceneParse.o
+OBJS = $(PROG).o LoadShaders.o gl3w.o viewer.o sceneParse.o loadObj.o
 
 all: $(PROG)
 

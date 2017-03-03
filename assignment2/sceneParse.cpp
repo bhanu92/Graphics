@@ -1,24 +1,24 @@
 // Code to parse the entire specified scene file
 // Reads the entire file word by word and stores into a string vector.
 
+#include "loadObj.h"
+
 #include <istream>
 #include <sstream>
 #include <algorithm>
 
-#include "loadObj.h"
-
 #define PI 3.14
 
-sceneInfo parseScene(char* sceneFile){
+sceneInfo sceneParse(string sceneFile){
 
         sceneInfo scene;
-        cout << "Scene File Name: " << endl;
+        cout << "Scene File Name: " << sceneFile << endl;
 
         vector<string> tokens;
         string token;
 
         ifstream file;
-        file.open("sceneFile");
+        file.open(sceneFile);
         if(!file.is_open()) {
                 cout << "Cannot open Scene file" << endl;
                 exit(EXIT_FAILURE);
@@ -26,12 +26,13 @@ sceneInfo parseScene(char* sceneFile){
 
         while(file >> token) {
                 tokens.push_back(token);
+                //cout << token << endl;
         }
 
         // Adding NULL values at the end of the vector
         // As the scenefiles are of varying size
         for(int i = 0; i < 32; i++)
-                tokens.push_back('\0');
+                tokens.push_back("");
 
         for (int i = 0; i < tokens.size(); i++) {
 
@@ -45,9 +46,9 @@ sceneInfo parseScene(char* sceneFile){
                         scene.view.center.y =  stof(tokens.at(i+7));
                         scene.view.center.z =  stof(tokens.at(i+8));
 
-                        scene.view.center.x =  stof(tokens.at(i+10));
-                        scene.view.center.y =  stof(tokens.at(i+11));
-                        scene.view.center.z =  stof(tokens.at(i+12));
+                        scene.view.viewup.x =  stof(tokens.at(i+10));
+                        scene.view.viewup.y =  stof(tokens.at(i+11));
+                        scene.view.viewup.z =  stof(tokens.at(i+12));
 
                         continue;
 
@@ -63,9 +64,10 @@ sceneInfo parseScene(char* sceneFile){
                         else if(tokens.at(i+2).compare("local") == 0)
                                 sceneLight.isLocal = 1;
 
-                        else if(tokens.at(i+2).compare("spot") == 0)
+                        else if(tokens.at(i+2).compare("spot") == 0) {
                                 sceneLight.isSpot = 1;
-                        sceneLight.isLocal = 1;
+                                sceneLight.isLocal = 1;
+                        }
 
                         if(tokens.at(i+3).compare("ambient") == 0) {
                                 sceneLight.ambient.x = stof(tokens.at(i+4));
@@ -126,13 +128,13 @@ sceneInfo parseScene(char* sceneFile){
                         //rotation
                         if(tokens.at(i+4).compare("rx") == 0) {
                                 sceneObject.rx = stof(tokens.at(i+5));
-                                vec3 xaxis = {1, 0, 0};
+                                vec3 xaxis(1, 0, 0);
                                 modMat = modMat * rotate(modMat, float((sceneObject.rx * PI)/180.0f), xaxis);
                                 sceneObject.modelMatrix = modMat;
                         }
 
                         //translation
-                        if(tokens.at(i+4).compare("t") == 0) {
+                        else if(tokens.at(i+4).compare("t") == 0) {
                                 sceneObject.t.x = stof(tokens.at(i+5));
                                 sceneObject.t.y = stof(tokens.at(i+6));
                                 sceneObject.t.z = stof(tokens.at(i+7));
@@ -141,7 +143,7 @@ sceneInfo parseScene(char* sceneFile){
                         }
 
                         //scaling
-                        if(tokens.at(i+4).compare("s") == 0) {
+                        else if(tokens.at(i+4).compare("s") == 0) {
                                 sceneObject.s.x = stof(tokens.at(i+5));
                                 sceneObject.s.y = stof(tokens.at(i+6));
                                 sceneObject.s.z = stof(tokens.at(i+7));
