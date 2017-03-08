@@ -1,0 +1,37 @@
+view
+eye 3. 3. 1.5
+center 0. 0. 0.
+viewup 0. 0. 1.
+
+light
+type directional ambient .1 .1 .1
+color 0. 0.8 0.5  position 2. 0. 2.
+
+light
+type local
+ambient .1 0 0 color 1. 1. 0 position 20. 20. 30.
+constAtt 0.01 linearAtt 0.01 quadAtt .002
+
+light
+type directional ambient .1 .1 .1
+color 0.7 0. 0.1 position 0. 4. 0.
+
+object OBJfiles/StanfordModels/bunny.obj shader BLINN_PHONG
+rz 90.
+t 1. -1. -1.
+s 0.5 0.5 0.5
+rx 75.
+
+object OBJfiles/StanfordModels/armadillo.obj shader BLINN_PHONG
+rx 45.
+t 1.6 -2.7 1.5
+
+object OBJfiles/teapot.obj shader BLINN_PHONG
+rx 25.
+t 0 0.5 0.6
+s 0.003 0.003 0.003
+
+
+object OBJfiles/chair/chair.obj shader BLINN_PHONG
+t 0 0 0
+ry 90. rz 90.

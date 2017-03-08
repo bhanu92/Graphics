@@ -10,6 +10,7 @@ constAtt 0.2 linearAtt 0.2 quadAtt .002 coneDirection 0. 0. -1.
 spotCosCutoff .93 spotExponent 25.
 
 object OBJfiles/sphere2.obj
+shader BLINN_PHONG
 
 object OBJfiles/sphere2.obj
 shader BLINN_PHONG

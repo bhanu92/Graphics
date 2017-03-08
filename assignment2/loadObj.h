@@ -60,7 +60,7 @@ typedef struct {
         string objPath;
         string shaderType;
         vec3 t;
-        float rx;
+        float rx = 0.0f, ry = 0.0f, rz = 0.0f;
         vec3 s;
         mat4 modelMatrix;
 } objectProperties;

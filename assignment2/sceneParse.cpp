@@ -118,36 +118,111 @@ sceneInfo sceneParse(string sceneFile){
 
                         objectProperties sceneObject;
                         mat4 modMat(1.0f);
-
+                        bool translation = false, scaling = false;
+                        bool rotX = false, rotY = false, rotZ = false;
 
                         sceneObject.objPath = tokens.at(i+1);
                         sceneObject.shaderType = tokens.at(i+3);
 
-                        //rotation
-                        if(tokens.at(i+4).compare("rx") == 0) {
+                        for(int j = i+4; j < tokens.size(); j++) {
+
+                                if(tokens.at(j).compare("object") == 0)
+                                        break;
+
+                                if(tokens.at(j).compare("t") == 0) {
+                                        sceneObject.t.x = stof(tokens.at(j+1));
+                                        sceneObject.t.y = stof(tokens.at(j+2));
+                                        sceneObject.t.z = stof(tokens.at(j+3));
+                                        modMat = translate(modMat, sceneObject.t) * modMat;
+                                        //translation = true;
+                                }
+
+                                if(tokens.at(j).compare("s") == 0) {
+                                        sceneObject.s.x = stof(tokens.at(j+1));
+                                        sceneObject.s.y = stof(tokens.at(j+2));
+                                        sceneObject.s.z = stof(tokens.at(j+3));
+                                        modMat = scale(modMat, sceneObject.s) * modMat;
+                                        //scaling = true;
+                                }
+
+                                if(tokens.at(j).compare("rx") == 0) {
+                                        sceneObject.rx = stof(tokens.at(j+1));
+                                        vec3 xaxis(1, 0, 0);
+                                        modMat = rotate(modMat, float((sceneObject.rx * PI)/180.0f), xaxis) * modMat;
+                                        //rotX = true;
+                                }
+
+                                if(tokens.at(j).compare("ry") == 0) {
+                                        sceneObject.ry = stof(tokens.at(j+1));
+                                        vec3 yaxis(0, 1, 0);
+                                        modMat = rotate(modMat, float((sceneObject.ry * PI)/180.0f), yaxis) * modMat;
+                                        //rotY = true;
+                                }
+
+                                if(tokens.at(j).compare("rz") == 0) {
+                                        sceneObject.rz = stof(tokens.at(j+1));
+                                        vec3 zaxis(0, 0, 1);
+                                        modMat = rotate(modMat, float((sceneObject.rz * PI)/180.0f), zaxis) * modMat;
+                                        //rotZ = true;
+                                }
+                        }
+
+                        sceneObject.modelMatrix = modMat;
+
+                        /*
+                           // This order is verrryyyy important
+                           if(rotX) {
+                                vec3 xaxis(1, 0, 0);
+                                modMat = modMat * rotate(modMat, float((sceneObject.rx * PI)/180.0f), xaxis);
+                           }
+
+                           if(rotY) {
+                                vec3 yaxis(0, 1, 0);
+                                modMat = modMat * rotate(modMat, float((sceneObject.ry * PI)/180.0f), yaxis);
+                           }
+
+                           if(rotZ) {
+                                vec3 zaxis(0, 0, 1);
+                                modMat = modMat * rotate(modMat, float((sceneObject.rz * PI)/180.0f), zaxis);
+                           }
+
+                           if(translation) {
+                                modMat = modMat * translate(modMat, sceneObject.t);
+                           }
+
+                           if(scaling) {
+                                modMat = modMat * scale(modMat, sceneObject.s);
+                           }
+
+                           sceneObject.modelMatrix = modMat;
+
+
+                           //rotation
+                           if(tokens.at(i+4).compare("rx") == 0) {
                                 sceneObject.rx = stof(tokens.at(i+5));
                                 vec3 xaxis(1, 0, 0);
                                 modMat = modMat * rotate(modMat, float((sceneObject.rx * PI)/180.0f), xaxis);
                                 sceneObject.modelMatrix = modMat;
-                        }
+                           }
 
-                        //translation
-                        else if(tokens.at(i+4).compare("t") == 0) {
+                           //translation
+                           else if(tokens.at(i+4).compare("t") == 0) {
                                 sceneObject.t.x = stof(tokens.at(i+5));
                                 sceneObject.t.y = stof(tokens.at(i+6));
                                 sceneObject.t.z = stof(tokens.at(i+7));
                                 modMat = modMat * translate(modMat, sceneObject.t);
                                 sceneObject.modelMatrix = modMat;
-                        }
+                           }
 
-                        //scaling
-                        else if(tokens.at(i+4).compare("s") == 0) {
+                           //scaling
+                           else if(tokens.at(i+4).compare("s") == 0) {
                                 sceneObject.s.x = stof(tokens.at(i+5));
                                 sceneObject.s.y = stof(tokens.at(i+6));
                                 sceneObject.s.z = stof(tokens.at(i+7));
                                 modMat = modMat * scale(modMat, sceneObject.s);
                                 sceneObject.modelMatrix = modMat;
-                        }
+                           }
+                         */
 
                         //End of reading one object description
                         //Stuffing the above info into the object vector

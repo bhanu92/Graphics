@@ -26,7 +26,7 @@ viewProperties initView;
 vector<lightProperties> initLight;
 mat4 viewMatrix;
 GLuint program;
-GLfloat nearVal = 2.0f, farVal = 10000.0f;
+GLfloat nearVal = 1.0f, farVal = 10000.0f;
 bool wireFrame = false;
 bool north = false, south = false, west = false, east = false;
 bool top = false, down = false;
@@ -91,8 +91,8 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                                         south = true;
                                 break;
 
-                        case GLFW_KEY_D:
-                        case GLFW_KEY_RIGHT:
+                        case GLFW_KEY_A:
+                        case GLFW_KEY_LEFT:
                                 if(east == true) {
                                         sceneData.view.eye -= 2.0f * u;
                                         sceneData.view.center -= 2.0f * u;
@@ -103,8 +103,8 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                                         east = true;
                                 break;
 
-                        case GLFW_KEY_A:
-                        case GLFW_KEY_LEFT:
+                        case GLFW_KEY_D:
+                        case GLFW_KEY_RIGHT:
                                 if(west == true) {
                                         sceneData.view.eye += 2.0f * u;
                                         sceneData.view.center += 2.0f * u;
@@ -164,8 +164,7 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                         case GLFW_KEY_C:
                                 if(rotateGazeClock == true) {
                                         mat4 matrix = rotate(mat4(1.0f), (1.0f*3.14f)/180.0f, gaze);
-                                        sceneData.view.eye = vec3(matrix * vec4(sceneData.view.eye, 1.0f));
-                                        sceneData.view.center = vec3(matrix * vec4(sceneData.view.center, 1.0f));
+                                        sceneData.view.viewup = vec3(matrix * vec4(sceneData.view.viewup, 1.0f));
                                         viewMatrix = lookAt(sceneData.view.eye, sceneData.view.center, sceneData.view.viewup);
                                         rotateGazeClock = false;
                                 }
@@ -176,8 +175,7 @@ void cbfun(GLFWwindow* window, int key, int scancode, int action, int mods){
                         case GLFW_KEY_V:
                                 if(rotateGazeCounterClock == true) {
                                         mat4 matrix = rotate(mat4(1.0f), -(1.0f*3.14f)/180.0f, gaze);
-                                        sceneData.view.eye = vec3(matrix * vec4(sceneData.view.eye, 1.0f));
-                                        sceneData.view.center = vec3(matrix * vec4(sceneData.view.center, 1.0f));
+                                        sceneData.view.viewup = vec3(matrix * vec4(sceneData.view.viewup, 1.0f));
                                         viewMatrix = lookAt(sceneData.view.eye, sceneData.view.center, sceneData.view.viewup);
                                         rotateGazeCounterClock = false;
                                 }
@@ -209,15 +207,15 @@ void init(string fileName) {
 
         sceneData = sceneParse(fileName);
 
-        /*
-           cout << "Size of light vector from scene " << sceneData.light.size() << "\n"
+
+        cout << "Size of light vector from scene " << sceneData.light.size() << "\n"
              << "Size of object vector from scene " << sceneData.object.size() << endl;
 
-           cout << "**********Scene Data************" << endl;
-           cout << "Eye: " << to_string(sceneData.view.eye) << endl;
-           cout << "Center: " << to_string(sceneData.view.center) << endl;
-           cout << "viewUp: " << to_string(sceneData.view.viewup) << endl;
-           for(int i = 0; i < sceneData.light.size(); i++) {
+        cout << "**********Scene Data************" << endl;
+        cout << "Eye: " << to_string(sceneData.view.eye) << endl;
+        cout << "Center: " << to_string(sceneData.view.center) << endl;
+        cout << "viewUp: " << to_string(sceneData.view.viewup) << endl;
+        for(int i = 0; i < sceneData.light.size(); i++) {
                 cout << "********light number " << i << "*********"<< endl;
                 cout << "isEnabled" << sceneData.light.at(i).isEnabled << endl;
                 cout << "isLocal" << sceneData.light.at(i).isLocal << endl;
@@ -232,27 +230,28 @@ void init(string fileName) {
                 cout << "constantAttenuation" << sceneData.light.at(i).constantAttenuation << endl;
                 cout << "linearAttenuation" << sceneData.light.at(i).linearAttenuation << endl;
                 cout << "quadraticAttenuation" << sceneData.light.at(i).quadraticAttenuation << endl;
-           }
-           for (int i = 0; i < sceneData.object.size(); i++) {
+        }
+        for (int i = 0; i < sceneData.object.size(); i++) {
                 cout << "********object number " << i << "*********"<< endl;
                 cout << "Object path "<< sceneData.object.at(i).objPath << endl;
                 cout << "shaderPath" << sceneData.object.at(i).shaderType << endl;
                 cout << "t vector " << to_string(sceneData.object.at(i).t) << endl;
                 cout << "rx value " << sceneData.object.at(i).rx << endl;
                 cout << "Model Mat" << to_string(sceneData.object.at(i).modelMatrix) << endl;
-           }
-         */
+        }
 
-        string objFilePath = sceneData.object.at(0).objPath;
-        //cout << objFilePath <<" " << objFilePath.length()<<endl;
-        //char* file = &objFilePath[0];
-        char *file = (char*) calloc(1, sizeof(objFilePath));
-        for(int i = 0; i < objFilePath.length(); i++)
-                *(file + (i*sizeof(char))) = objFilePath[i];
-        //cout << "Object file path " << file << endl;
-        loadObjFile(file, &objinfo, &numObjs);
-        //cout << "Number of objects returned from OBJ file: " << numObjs << endl;
+
+
         for(int i = 0; i < sceneData.object.size(); i++) {
+                string objFilePath = sceneData.object.at(i).objPath;
+                //cout << objFilePath <<" " << objFilePath.length()<<endl;
+                //char* file = &objFilePath[0];
+                char *file = (char*) calloc(1, sizeof(objFilePath));
+                for(int i = 0; i < objFilePath.length(); i++)
+                        *(file + (i*sizeof(char))) = objFilePath[i];
+                //cout << "Object file path " << file << endl;
+                loadObjFile(file, &objinfo, &numObjs);
+                //cout << "Number of objects returned from OBJ file: " << numObjs << endl;
                 for(int j = 0; j < numObjs; j++) {
                         objinfo[j].modelMatrix = sceneData.object.at(i).modelMatrix;
                         //cout <<"Ka: " << to_string(objinfo[j].Ka) << endl;
@@ -296,6 +295,8 @@ void objectInformation(){
                         x = x * aspectRatio;
                 else
                         y = x / aspectRatio;
+
+                //mat4 projectionMatrix = perspective(radians(70.0f), aspectRatio, nearVal, farVal);
                 mat4 projectionMatrix = frustum(-x, x,
                                                 -y, y,
                                                 nearVal, farVal);
