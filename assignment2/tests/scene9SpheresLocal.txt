@@ -1,10 +1,14 @@
 view
-eye 10. 10. 7. center 3. 3. 1. 
+eye 10. 10. 7.
+center 3. 3. 0.
 viewup 0. 0. 1.
 
 light
-type directional ambient .1 .1 .1
-color 1. 1. 1.  position 0. 0. 1.
+type local
+ambient .1 .1 .1
+color 1. 1. 1.
+position 10. 10. 7.
+constAtt 0.01 linearAtt 0.01 quadAtt 0.01
 
 object OBJfiles/sphere2.obj
 shader BLINN_PHONG

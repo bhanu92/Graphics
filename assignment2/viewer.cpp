@@ -236,7 +236,10 @@ void init(string fileName) {
                 cout << "Object path "<< sceneData.object.at(i).objPath << endl;
                 cout << "shaderPath" << sceneData.object.at(i).shaderType << endl;
                 cout << "t vector " << to_string(sceneData.object.at(i).t) << endl;
+                cout << "s vector " << to_string(sceneData.object.at(i).s) << endl;
                 cout << "rx value " << sceneData.object.at(i).rx << endl;
+                cout << "ry value " << sceneData.object.at(i).ry << endl;
+                cout << "rz value " << sceneData.object.at(i).rz << endl;
                 cout << "Model Mat" << to_string(sceneData.object.at(i).modelMatrix) << endl;
         }
 
@@ -347,9 +350,11 @@ void lightInformation(){
                         vec4 pos = viewMatrix * (vec4(position, 1.0f)); //changing world coordinates to eye coordinates
                         pos = pos/pos.w;
                         position = vec3(pos);
+                        //position = vec3(viewMatrix * vec4(position, 1.0f));
                 }
                 else{
                         position = mat3(viewMatrix) * position;
+                        //position = vec3(viewMatrix * vec4(position, 0.0f));
                 }
                 //cout << to_string(position) << endl;
                 vec3 halfVector = sceneData.light.at(i).halfVector;

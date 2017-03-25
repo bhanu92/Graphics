@@ -1,0 +1,70 @@
+#/bin/bash
+echo view settings [2pts each]
+
+echo i.scene1.txt - teapot with handle left, spout right
+./viewer_base scene1.txt > /dev/null
+./viewer scene1.txt > /dev/null
+echo ii.scene2.txt - teapot with spout in front
+./viewer_base scene2.txt > /dev/null
+./viewer scene2.txt > /dev/null
+echo iii.scene3.txt – teapot with spout left, handle right
+./viewer_base scene3.txt > /dev/null
+./viewer scene3.txt > /dev/null
+echo iv.scene4.txt – teapot with spout left, handle right, looking down
+./viewer_base scene4.txt > /dev/null
+./viewer scene4.txt > /dev/null
+echo v.scene5.txt – Millennium falcon, with radar dish toward viewer_base
+./viewer_base scene5.txt > /dev/null
+./viewer scene5.txt > /dev/null
+echo up to 4 lights[2pts each]
+echo scene6.txt – red sphere, one white directional light overhead
+./viewer_base scene6.txt > /dev/null
+./viewer scene6.txt > /dev/null
+echo scene7.txt –red sphere, one white directional light to the right
+./viewer_base scene7.txt > /dev/null
+./viewer scene7.txt > /dev/null
+echo scene8.txt –white sphere,  two directional white lights one to right, one to the left
+./viewer_base scene8.txt > /dev/null
+./viewer scene8.txt > /dev/null
+echo scene9.txt – white sphere, two directional white lights from scene8, add red local light directly overhead
+./viewer_base scene9.txt > /dev/null
+./viewer scene9.txt > /dev/null
+echo scene10.txt – white sphere, lights from scene9 and add  green spotlight from bottom
+./viewer_base scene10.txt > /dev/null
+./viewer scene10.txt > /dev/null
+echo multiple obj files [2pts each]
+echo "scene9SpheresDirectional.txt – 9 red spheres with one white directional light overhead (handed out with assignment)"
+./viewer_base scene9SpheresDirectional.txt > /dev/null
+./viewer scene9SpheresDirectional.txt > /dev/null
+echo "scene9SpheresLocal.txt – 9 red spheres with one white local light at eye position (modification to file handed out with assignment)"
+./viewer_base scene9SpheresLocal.txt > /dev/null
+./viewer scene9SpheresLocal.txt > /dev/null
+echo "scene9SpheresSpot.txt – 9 red spheres with two spot lights overhead (modification to file handed out with assignment)"
+./viewer_base scene9SpheresSpot.txt > /dev/null
+./viewer scene9SpheresSpot.txt > /dev/null
+echo "scene11.txt –  brown floor, one lamp, two tables, sphere and teapot"
+./viewer_base scene11.txt > /dev/null
+./viewer scene11.txt > /dev/null
+echo "scene12.txt – brown floor, two f-16s, one spotlight on each plane"
+./viewer_base scene12.txt > /dev/null
+./viewer scene12.txt > /dev/null
+echo view one simple object [5 pts]
+echo scene13.txt -  axis with four directional lights
+./viewer_base scene13.txt > /dev/null
+./viewer scene13.txt > /dev/null
+echo view one moderately complex object
+echo "scene14.txt – bunny with one white directional light overhead and one white spotlight behind bunny’s head"
+./viewer_base scene14.txt > /dev/null
+./viewer scene14.txt > /dev/null
+echo view multiple objects with modeling transforms
+echo "scene15.txt - brown floor, two tables, teapot on one table, lamp on the other, two spot lights, one on each table, and one overhead directional light."
+./viewer_base scene15.txt > /dev/null
+./viewer scene15.txt > /dev/null
+echo "scene1.txt – use teapot scene to test reshaping window [1pt each]"
+echo Make window rectangular
+echo Make window smaller and rectangular
+echo Make window smaller and square
+echo Make window larger
+echo Make window tall and narrow
+./viewer_base scene1.txt > /dev/null
+./viewer scene1.txt > /dev/null

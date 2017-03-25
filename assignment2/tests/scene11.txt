@@ -1,0 +1,44 @@
+view  eye 8. -8. 3. center 0. 0. 0.  viewup 0. 0. 1.
+
+light type directional ambient .1 .1 .1 color 1. 1. 1. position 0. 1. 0. 
+
+light type directional ambient .1 .1 .1 color 1. 1. 1. position 0. 0. 1. 
+
+object OBJfiles/plate.obj
+shader BLINN_PHONE
+s 10 10 10 
+t -5 -5 0
+
+object OBJfiles/dlamp_tris.obj
+shader BLINN_PHONE
+s .02 .02 .02
+rx 90
+t -4. -3.5 1.5
+
+object OBJfiles/dtable_tris.obj
+shader BLINN_PHONE
+s .02 .02 .02
+rx 90
+rz 180
+t -4. -3.75 0
+
+object OBJfiles/dtable_tris.obj
+shader BLINN_PHONE
+s .02 .02 .02
+rx 90
+t 2 4.5 0
+
+object OBJfiles/teapot.obj
+shader BLINN_PHONE
+s .005 .005 .005
+rx 90
+t 2.25 4.25 1.67
+
+
+object OBJfiles/sphere2.obj
+shader BLINN_PHONE
+rx 90
+t 0 0 1
+
+
+

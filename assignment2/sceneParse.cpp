@@ -6,6 +6,7 @@
 #include <istream>
 #include <sstream>
 #include <algorithm>
+#include <glm/gtx/string_cast.hpp>
 
 #define PI 3.14
 
@@ -120,7 +121,7 @@ sceneInfo sceneParse(string sceneFile){
                         mat4 modMat(1.0f);
                         bool translation = false, scaling = false;
                         bool rotX = false, rotY = false, rotZ = false;
-
+                        cout << "Inital model matrix " << to_string(modMat) << endl;
                         sceneObject.objPath = tokens.at(i+1);
                         sceneObject.shaderType = tokens.at(i+3);
 
@@ -133,41 +134,49 @@ sceneInfo sceneParse(string sceneFile){
                                         sceneObject.t.x = stof(tokens.at(j+1));
                                         sceneObject.t.y = stof(tokens.at(j+2));
                                         sceneObject.t.z = stof(tokens.at(j+3));
-                                        modMat = translate(modMat, sceneObject.t) * modMat;
-                                        //translation = true;
+                                        modMat = translate(mat4(1.0f), sceneObject.t) * modMat;
+                                        //cout << "Translate Matrix " << to_string() << endl;
+                                        cout << "Model Matrix translating " << to_string(modMat) << endl;
+                                        cout << "Translating" << endl;
                                 }
 
                                 if(tokens.at(j).compare("s") == 0) {
                                         sceneObject.s.x = stof(tokens.at(j+1));
                                         sceneObject.s.y = stof(tokens.at(j+2));
                                         sceneObject.s.z = stof(tokens.at(j+3));
-                                        modMat = scale(modMat, sceneObject.s) * modMat;
-                                        //scaling = true;
+                                        modMat = scale(mat4(1.0f), sceneObject.s) * modMat;
+                                        cout << "Model Matrix scaling " << to_string(modMat) << endl;
+                                        cout << "Scaling" << endl;
                                 }
 
                                 if(tokens.at(j).compare("rx") == 0) {
                                         sceneObject.rx = stof(tokens.at(j+1));
                                         vec3 xaxis(1, 0, 0);
-                                        modMat = rotate(modMat, float((sceneObject.rx * PI)/180.0f), xaxis) * modMat;
-                                        //rotX = true;
+                                        modMat = rotate(mat4(1.0f), float((sceneObject.rx * PI)/180.0f), xaxis) * modMat;
+                                        cout << "Model Matrix rx " << to_string(modMat) << endl;
+                                        cout << "Rotate X" << endl;
                                 }
 
                                 if(tokens.at(j).compare("ry") == 0) {
                                         sceneObject.ry = stof(tokens.at(j+1));
                                         vec3 yaxis(0, 1, 0);
-                                        modMat = rotate(modMat, float((sceneObject.ry * PI)/180.0f), yaxis) * modMat;
-                                        //rotY = true;
+                                        modMat = rotate(mat4(1.0f), float((sceneObject.ry * PI)/180.0f), yaxis) * modMat;
+                                        cout << "Model Matrix ry " << to_string(modMat) << endl;
+                                        cout << "Rotate Y" << endl;
                                 }
 
                                 if(tokens.at(j).compare("rz") == 0) {
                                         sceneObject.rz = stof(tokens.at(j+1));
                                         vec3 zaxis(0, 0, 1);
-                                        modMat = rotate(modMat, float((sceneObject.rz * PI)/180.0f), zaxis) * modMat;
-                                        //rotZ = true;
+                                        modMat = rotate(mat4(1.0f), float((sceneObject.rz * PI)/180.0f), zaxis) * modMat;
+                                        cout << "Model Matrix rz " << to_string(modMat) << endl;
+                                        cout << "Rotate Z" << endl;
                                 }
-                        }
 
+                        }
+                        cout << "End of cmputing model matrix for one object" << endl;
                         sceneObject.modelMatrix = modMat;
+                        cout <<"Final Model MAtrix " << to_string(modMat);
 
                         /*
                            // This order is verrryyyy important
