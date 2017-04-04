@@ -638,6 +638,7 @@ int main(int argc, char **argv)
                 display();
                 glfwSwapBuffers(window);
                 glfwPollEvents();
+                glfwSetKeyCallback(window, cbfun);
         }
 
         glfwDestroyWindow(window);

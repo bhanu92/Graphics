@@ -9,5 +9,5 @@ ambient .1 .1 .1
 color 1. 1. 1.
 position 0. 0. 1.
 
-object OBJfiles/square.obj
+object customScene/EDF_trooper/Norwood_AR_F.obj
 shader BLINN_PHONG

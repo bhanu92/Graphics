@@ -1,0 +1,44 @@
+view
+eye 1.2 2 0.8
+center 0. 0. 0.
+viewup 0. 0. 1.
+
+light
+type directional
+ambient .1 .1 .1 color 1. 1. 1. position 0. 2. 0.
+
+light
+type directional
+ambient .1 .1 .1 color 1. 1. 1. position 0. 2 1.
+
+light
+type directional
+ambient .1 .1 .1 color 1. 0. 0. position 0 -7 3.
+
+light
+type directional
+ambient .1 .1 .1 color 1. 1. 1. position 5 0 0.
+
+object customScene/Hulk/Hulk.obj
+shader BLINN_PHONG
+rx 90. rz 150.
+t -1 -3 0.5
+s .2 .2 .2
+
+object customScene/Wolf/Wolf.obj
+shader BLINN_PHONG
+rx 90. rz 180.
+t 2 -3 -0.5
+s 0.25 0.25 0.25
+
+object customScene/cat/cat.obj
+shader BLINN_PHONG
+rx 90. rz 130.
+t -1.5 0 0
+s 0.5 0.5 0.5
+
+object customScene/EDF_trooper/EDF_trooper.obj
+shader BLINN_PHONG
+rx 90. rz 155.
+t 1.8 2.75 -2
+s 0.2 0.2 0.2
