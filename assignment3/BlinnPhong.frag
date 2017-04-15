@@ -31,11 +31,14 @@ uniform float shininess;
 uniform bool isTextureMapping ;
 uniform sampler2D texID;
 
+
 in vec3 Normal;		// normal in eye coordinates
 in vec4 Position;	// vertex position in eye coordinates
 in vec2 tIndex;         // texture map indices
 
 out vec4 FragColor;
+vec4 texColor= texture(texID,tIndex);
+
 
 void main()
 {
@@ -102,23 +105,27 @@ void main()
             specularCoeff = pow(specularCoeff, shininess); // * Strength;
 
 		// Accumulate all the lights� effects as it interacts with material properties
+        if(isTextureMapping == true){
+        if(texColor.a == 0){
+                discard;
+        }
+        // Replacing surface diffuse color with texture map color(RGB values)
+        scatteredLight += Lights[light].ambient * ambient * attenuation +
+                  Lights[light].color * (diffuseCoeff * vec3(texColor)) * attenuation;
 
-		scatteredLight += Lights[light].ambient * ambient * attenuation +
-                          Lights[light].color * (diffuseCoeff * diffuse) * attenuation;
+        }
+
+        else{
+	scatteredLight += Lights[light].ambient * ambient * attenuation +
+                  Lights[light].color * (diffuseCoeff * diffuse) * attenuation;
+        }
         reflectedLight += Lights[light].color * (specularCoeff * specular) * attenuation;
 
     }
 
 	vec3 rgb = min(scatteredLight + reflectedLight, vec3(1.0));
 
-        if(isTextureMapping == true){
-                vec4 color= texture(texID,tIndex)*vec4(rgb,1.0f);
-                if(color.a == 0){
-                        discard;
-                }
-                FragColor = color;
-        }
-        else{
+
                 FragColor = vec4(rgb, 0.0f);
-        }
+
 }

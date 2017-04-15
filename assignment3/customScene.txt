@@ -3,9 +3,6 @@ eye 1.2 2 0.8
 center 0. 0. 0.
 viewup 0. 0. 1.
 
-light
-type directional
-ambient .1 .1 .1 color 1. 1. 1. position 0. 2. 0.
 
 light
 type directional
@@ -17,7 +14,7 @@ ambient .1 .1 .1 color 1. 0. 0. position 0 -7 3.
 
 light
 type directional
-ambient .1 .1 .1 color 1. 1. 1. position 5 0 0.
+ambient .1 .1 .1 color 1. 1. 1. position 2 0 0.
 
 object customScene/Hulk/Hulk.obj
 shader BLINN_PHONG

@@ -111,10 +111,8 @@ void main()
         specularCoeff = max(0.0, dot(myNormal, halfVector));
 
 
-		scatteredLight += Lights[0].ambient * ambient +
-                          Lights[0].color * (diffuseCoeff * diffuse);
-
-
+	scatteredLight += Lights[0].color * ambient +
+                  Lights[0].color * (diffuseCoeff * diffuse);
 
 	vec3 rgb = min(scatteredLight, vec3(1.0));
 

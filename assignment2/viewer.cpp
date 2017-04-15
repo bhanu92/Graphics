@@ -299,10 +299,10 @@ void objectInformation(){
                 else
                         y = x / aspectRatio;
 
-                //mat4 projectionMatrix = perspective(radians(70.0f), aspectRatio, nearVal, farVal);
-                mat4 projectionMatrix = frustum(-x, x,
-                                                -y, y,
-                                                nearVal, farVal);
+                mat4 projectionMatrix = perspective(radians(70.0f), aspectRatio, nearVal, farVal);
+                //mat4 projectionMatrix = frustum(-x, x,
+                //                                -y, y,
+                //                                nearVal, farVal);
                 //cout << "Projection Matrix in the display: " << to_string(projectionMatrix) << endl;
                 mat4 mvpMatrix = projectionMatrix * viewMatrix * modelMat;
                 //cout << "MVP Matrix in the display: " << to_string(mvpMatrix) << endl;
